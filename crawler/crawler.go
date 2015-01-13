@@ -3,16 +3,33 @@ package main
 import (
 	"fmt"
 	gr "github.com/blackdev1l/go-crawler/graph"
+	"golang.org/x/net/html"
+	"net/http"
 )
 
 func main() {
-	tree := gr.Node{}
-	tree.SetUrl("google.com")
-	url := tree.GetUrl()
-	fmt.Println(url)
-	tree.Add("yahoo.com")
-	tree.Add("mage.it")
-	tree.Add("leroy.com")
-	child := tree.GetChild()
-	child[2].Add("mage.com")
+
+}
+
+func parse(url string) {
+	resp, err := http.Get("http://gaming.ngi.it/index.php")
+	if err != nil {
+		fmt.Println("error at http.get ")
+	}
+
+	doc, err := html.Parse(resp.Body)
+	if err != nil {
+		fmt.Println("error at html.parse ")
+	}
+	var f func(*html.Node)
+	f = func(n *html.Node) {
+		if n.Type == html.ElementNode && n.Data == "a" {
+			fmt.Println(n.Attr[0].Val)
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			f(c)
+		}
+	}
+	f(doc)
+
 }
