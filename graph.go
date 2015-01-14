@@ -1,9 +1,10 @@
-package graph
+package main
 
 import (
 	"encoding/json"
 	"fmt"
 	"golang.org/x/net/html"
+	"log"
 	"net/http"
 )
 
@@ -11,6 +12,11 @@ type Node struct {
 	Url    string `json:"url"`
 	parent *Node
 	Child  []*Node
+}
+
+func NewGraph() *Node {
+	n := new(Node)
+	return n
 }
 
 func (p *Node) Add(url string) bool {
@@ -34,12 +40,12 @@ func (P *Node) Parse(url string) []byte {
 	P.Url = url
 	resp, err := http.Get(url)
 	if err != nil {
-		fmt.Println("error at http.get ")
+		log.Fatal(err)
 	}
 
 	doc, err := html.Parse(resp.Body)
 	if err != nil {
-		fmt.Println("error at html.parse ")
+		log.Fatal(err)
 	}
 
 	var f func(*html.Node, *Node)
@@ -54,7 +60,7 @@ func (P *Node) Parse(url string) []byte {
 	f(doc, P)
 	b, err := json.Marshal(P)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Fatal(err)
 	}
 	return b
 
