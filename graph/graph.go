@@ -1,43 +1,61 @@
 package graph
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"golang.org/x/net/html"
+	"net/http"
+)
 
 type Node struct {
-	url    string
+	Url    string `json:"url"`
 	parent *Node
-	child  []*Node
-}
-
-func (n *Node) SetUrl(url string) {
-	n.url = url
-
-}
-
-func (n Node) GetUrl() string {
-	return n.url
+	Child  []*Node
 }
 
 func (p *Node) Add(url string) bool {
 	n := new(Node)
-	n.url = url
-	n.parent = p
-	p.child = append(p.child, n)
+	n.Url = url
+	//n.parent = p
+	p.Child = append(p.Child, n)
 	return true
 }
 
-func (n Node) GetChild() []*Node {
-	return n.child
-}
-
-func (n Node) GetParent() Node {
-	return n
-}
-
 func (n Node) Print() {
-	for i := 0; i < len(n.child); i++ {
-		fmt.Println(n.child[i].GetUrl())
-		if n.child[i].child != nil {
-			n.child[i].Print()
+	for i := 0; i < len(n.Child); i++ {
+		fmt.Println(n.Child[i].Url)
+		if n.Child[i].Child != nil {
+			n.Child[i].Print()
 		}
 	}
+}
+
+func (P *Node) Parse(url string) []byte {
+	P.Url = url
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Println("error at http.get ")
+	}
+
+	doc, err := html.Parse(resp.Body)
+	if err != nil {
+		fmt.Println("error at html.parse ")
+	}
+
+	var f func(*html.Node, *Node)
+	f = func(n *html.Node, P *Node) {
+		if n.Type == html.ElementNode && n.Data == "a" {
+			P.Add(n.Attr[0].Val)
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			f(c, P)
+		}
+	}
+	f(doc, P)
+	b, err := json.Marshal(P)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return b
+
 }
