@@ -9,18 +9,18 @@ import (
 )
 
 func loadHtml() []byte {
-	fi, err := ioutil.ReadFile("www/index.html")
+	fi, err := ioutil.ReadFile("index.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(fi)
+	fmt.Println(string(fi))
 	return fi
 
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	out := loadHtml()
-	fmt.Fprintf(w, out)
+	index := loadHtml()
+	fmt.Fprint(w, string(index))
 }
 
 func Send(w http.ResponseWriter, r *http.Request) {
