@@ -1,13 +1,17 @@
 package main
 
 import (
-	"fmt"
 	//"github.com/gorilla/mux"
-	"io/ioutil"
-	"log"
+	"html/template"
 	"net/http"
 )
 
+type Page struct {
+	Title string
+	Body  template.HTML
+}
+
+/*
 func loadHtml() []byte {
 	fi, err := ioutil.ReadFile("index.html")
 	if err != nil {
@@ -17,10 +21,12 @@ func loadHtml() []byte {
 	return fi
 
 }
+*/
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	index := loadHtml()
-	fmt.Fprint(w, string(index))
+	var page Page
+	var templates = template.Must(template.ParseFiles("www/index.html"))
+	templates.ExecuteTemplate(w, "index.html", page)
 }
 
 func Send(w http.ResponseWriter, r *http.Request) {
