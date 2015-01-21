@@ -37,7 +37,7 @@ var routes = Routes{
 		Index,
 	},
 	Route{
-		"send",
+		"Send",
 		"POST",
 		"/send",
 		Send,
