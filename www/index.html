@@ -6,6 +6,11 @@
     <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
     <script src="js/sigma.min.js"></script>
     <script src="js/sigma.parsers.json.min.js"></script>
+    <script src="js/sigma.layout.forceAtlas2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="js/vis.min.css">
+    <script src="js/vis.min.js"></script>
+
+
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto">
     <!-- 2. Load the component using an HTML Import -->
     <link rel="import" href="bower_components/paper-input/paper-input.html">
@@ -13,6 +18,8 @@
     <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
     <link rel="import" href="bower_components/paper-button/paper-button.html">
     <link rel="import" href="bower_components/ajax-form/ajax-form.html">
+    <link rel="import" href="bower_components/paper-slider/paper-slider.html">
+
     <link rel="stylesheet" type="text/css" href="css/layout.css">
   </head>
   <body>
@@ -26,27 +33,25 @@
         <form is="ajax-form" action="send" method="post" enctype="application/json">
           <paper-input name="url" label="Crawl this url" floatingLabel></paper-input>
           <div id="button"><paper-button raised id="submitButton">Submit</paper-button></div>
-          <script>
-            document.getElementById('submitButton').addEventListener('click', function() {
-            document.forms[0].submit();
-            });
-
-            document.forms[0].addEventListener('submitted', function(event) {
-              var data = event.detail.responseText;
-              console.log(data);
-              s = new sigma({ 
-                      graph: data,
-                      container: 'container',
-                      settings: {
-                          defaultNodeColor: '#ec5148'
-                      }
-              });
-              s.refresh()
-            });
-          </script>
+          <paper-slider id="slider" pin min="5" max="50" name="number"></paper-slider>
         </form>
       </div>
+      <div id="container"></div>
       </core-header-panel>
-      <div id='container'></div>
   </body>
+  <script>
+  var s = new sigma(document.getElementById('container'));
+  document.getElementById('submitButton').addEventListener('click', function() {
+  document.forms[0].submit();
+  });
+
+  document.forms[0].addEventListener('submitted', function(event) {
+    var data = JSON.parse(event.detail.responseText);
+    console.log(data);
+    s.graph.read(data)
+    s.refresh();
+    s.graph.clear()
+   });
+
+</script>
 </html> 

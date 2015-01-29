@@ -14,7 +14,8 @@ type Page struct {
 }
 
 type UrlResponse struct {
-	Url string `json:"url"`
+	Url    string `json:"url"`
+	Number int    `json:"number"`
 }
 
 /*
@@ -40,14 +41,10 @@ func Index(w http.ResponseWriter, r *http.Request) {
 func Send(w http.ResponseWriter, r *http.Request) {
 	log.Println("POST Send")
 	var url UrlResponse
-	n := NewGraph()
+	g := new(Graph)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	/*
-		if err := json.NewEncoder(w).Encode(n); err != nil {
-			panic(err)
-		}
-	*/
+
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Fatal(err)
@@ -57,20 +54,19 @@ func Send(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(string(url.Url))
 
-	n.Parse(url.Url)
+	log.Println(string(url.Url))
+	log.Println(url.Number)
+	g.Url = url.Url
 	tmp := new(Node)
-	tmp.Url = url.Url
-	tmp.X = len(n.Child) + 1
-	tmp.Y = 1
+	tmp.Url = "0"
+	tmp.X = len(g.Child) + 1
+	tmp.Y = -1
 	tmp.Label = url.Url
 	tmp.Size = 1
-	n.Child = append(n.Child, tmp)
-	n.Url = ""
-	n.X = 0
-	n.Y = 0
-	if err := json.NewEncoder(w).Encode(n); err != nil {
+	g.Child = append(g.Child, tmp)
+	g.Parse(url.Url, url.Number)
+	if err := json.NewEncoder(w).Encode(g); err != nil {
 		panic(err)
 	}
 }

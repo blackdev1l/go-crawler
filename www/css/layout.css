@@ -23,8 +23,8 @@ paper-button {
 	width: 20%;
 }
 
- #container {
-    max-width: 400px;
-    height: 400px;
+#container {
+    max-width: 800px;
+    height: 800px;
     margin: auto;
   }
