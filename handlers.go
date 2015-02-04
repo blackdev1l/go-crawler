@@ -66,6 +66,7 @@ func Send(w http.ResponseWriter, r *http.Request) {
 	tmp.Size = 1
 	g.Child = append(g.Child, tmp)
 	g.Parse(url.Url, url.Number)
+	g.Child[0].X = (len(g.Child) + 1) / 2
 	if err := json.NewEncoder(w).Encode(g); err != nil {
 		panic(err)
 	}

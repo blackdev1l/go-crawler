@@ -13,6 +13,11 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#~0.5.2"
+    "polymer": "Polymer/polymer#~0.5.2",
+    "paper-input": "Polymer/paper-input#~0.5.4",
+    "paper-slider": "Polymer/paper-slider#~0.5.4",
+    "ajax-form": "~1.5.2",
+    "core-header-panel": "Polymer/core-header-panel#~0.5.4",
+    "core-toolbar": "Polymer/core-toolbar#~0.5.4"
   }
 }

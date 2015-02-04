@@ -41,15 +41,17 @@ func (p *Graph) Add(url string) bool {
 	e.Source = strconv.Itoa(len(p.Child))
 	e.Target = "0"
 	//setUrl(p.Url, url, n, e)
+	/*
+		if (len(p.Child))%2 != 0 {
+			n.X = p.Child[len(p.Child)-1].X
+			n.X += 5
+		} else {
 
-	if (len(p.Child))%2 != 0 {
-		n.X = p.Child[len(p.Child)-1].X
-		n.X += 5
-	} else {
-
-		n.X = p.Child[len(p.Child)-2].X
-		n.X -= 5
-	}
+			n.X = p.Child[len(p.Child)-2].X
+			n.X -= 5
+		}
+	*/
+	n.X = len(p.Child) + 1
 	n.Size = 1
 	//n.parent = p
 	if url != p.Url {
