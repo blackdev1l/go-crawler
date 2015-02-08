@@ -19,14 +19,13 @@ type Graph struct {
 	Child []*Node `json:"nodes,omitempty"`
 	Edges []*Edge `json:"edges,omitempty"`
 }
+
 type Node struct {
-	Url   string `json:"id,omitempty"`
+	Id    string `json:"id,omitempty"`
 	X     int    `json:"x"`
 	Y     int    `json:"y"`
 	Size  int    `json:"size"`
 	Label string `json:"label,omitempty"`
-	//	Child   []*Node `json:"nodes,omitempty"`
-	//	Edges   []*Edge `json:"edges,omitempty"`
 }
 
 func (p *Graph) Add(url string) bool {
@@ -36,24 +35,13 @@ func (p *Graph) Add(url string) bool {
 	num := len(p.Child)
 
 	log.Println(strconv.Itoa(num))
-	n.Url = strconv.Itoa(len(p.Child))
+	n.Id = strconv.Itoa(len(p.Child))
 	e.Id = "e-" + strconv.Itoa(len(p.Child))
 	e.Source = strconv.Itoa(len(p.Child))
 	e.Target = "0"
-	//setUrl(p.Url, url, n, e)
-	/*
-		if (len(p.Child))%2 != 0 {
-			n.X = p.Child[len(p.Child)-1].X
-			n.X += 5
-		} else {
 
-			n.X = p.Child[len(p.Child)-2].X
-			n.X -= 5
-		}
-	*/
 	n.X = len(p.Child) + 1
 	n.Size = 1
-	//n.parent = p
 	if url != p.Url {
 		p.Edges = append(p.Edges, e)
 	}
@@ -90,19 +78,4 @@ func (P *Graph) Parse(url string, number int) []byte {
 		log.Fatal(err)
 	}
 	return b
-}
-
-/*
-	Set id and label of both node and edge with the url
-*/
-
-func setUrl(target string, url string, n *Node, e *Edge) {
-	eID := "e-" + url
-	e.Id = eID
-	e.Id = eID
-	e.Source = url
-	e.Target = target
-	n.Url = url
-	n.Label = url
-	return
 }

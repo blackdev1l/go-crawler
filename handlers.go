@@ -39,6 +39,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 }
 
 func Send(w http.ResponseWriter, r *http.Request) {
+
 	log.Println("POST Send")
 	var url UrlResponse
 	g := new(Graph)
@@ -58,15 +59,21 @@ func Send(w http.ResponseWriter, r *http.Request) {
 	log.Println(string(url.Url))
 	log.Println(url.Number)
 	g.Url = url.Url
-	tmp := new(Node)
-	tmp.Url = "0"
-	tmp.X = len(g.Child) + 1
-	tmp.Y = -1
-	tmp.Label = url.Url
-	tmp.Size = 1
-	g.Child = append(g.Child, tmp)
+
+	//Creation of Root Node
+	Root := Node{
+		Id:    "0",
+		X:     len(g.Child) + 1,
+		Y:     -1,
+		Size:  1,
+		Label: url.Url,
+	}
+
+	g.Child = append(g.Child, &Root)
 	g.Parse(url.Url, url.Number)
+	//give to Root Center position
 	g.Child[0].X = (len(g.Child) + 1) / 2
+
 	if err := json.NewEncoder(w).Encode(g); err != nil {
 		panic(err)
 	}
